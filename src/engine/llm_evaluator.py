@@ -16,6 +16,7 @@ class LLMEvaluator:
             model=Config.LLM_MODEL,
             google_api_key=Config.GOOGLE_API_KEY,
             temperature=0.3,
+            max_retries=0,
         )
         
         # Verify key loading (First 10 chars only)
@@ -85,13 +86,17 @@ Respond with this exact JSON structure:
             except Exception as e:
                 err_str = str(e)
                 if "429" in err_str or "rate limit" in err_str.lower():
-                    wait_time = 10 * (attempt + 1)
+                    # Parse suggested retry delay from error, fallback to escalating wait
+                    match = re.search(r'retryDelay.*?(\d+)s', err_str)
+                    suggested = int(match.group(1)) if match else 15
+                    wait_time = max(suggested + 5, 10 * (attempt + 1))
+                    
                     self.logger.warning(f"Rate limited. Waiting {wait_time}s before retry ({attempt+1}/5)...")
                     time.sleep(wait_time)
                     continue
                 else:
                     if "401" in err_str:
-                        self.logger.error(f"AUTHENTICATION ERROR (401): Your OpenRouter API Key is invalid or expired. Check Render Environment Variables. Current key starts with: {Config.OPENROUTER_API_KEY[:10]}...")
+                        self.logger.error(f"AUTHENTICATION ERROR (401): Your Google API Key is invalid or expired. Check Render Environment Variables. Current key starts with: {Config.GOOGLE_API_KEY[:10]}...")
                     else:
                         self.logger.error(f"Error evaluating {item.get('title')}: {e}")
                     return None

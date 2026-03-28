@@ -92,7 +92,7 @@ class ProcessOrchestrator:
 
             # Rate limit: wait between requests (free tier = 8 req/min)
             if i < len(unique_items) - 1:
-                time.sleep(8)  # ~7.5 requests per minute
+                time.sleep(20)  # Increased delay for free-tier stability
 
         self.logger.info("=" * 60)
         self.logger.info(f"Cycle complete. Evaluated: {evaluated_count}, Saved: {saved_count}")
