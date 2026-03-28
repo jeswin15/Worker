@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     # LLM
-    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
     LLM_MODEL = os.getenv("LLM_MODEL", "meta-llama/llama-3-8b-instruct:free")
 
     # Data Source APIs

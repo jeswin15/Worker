@@ -95,7 +95,10 @@ Respond with this exact JSON structure:
                     time.sleep(wait_time)
                     continue
                 else:
-                    self.logger.error(f"Error evaluating {item.get('title')}: {e}")
+                    if "401" in err_str:
+                        self.logger.error(f"AUTHENTICATION ERROR (401): Your OpenRouter API Key is invalid or expired. Check Render Environment Variables. Current key starts with: {Config.OPENROUTER_API_KEY[:10]}...")
+                    else:
+                        self.logger.error(f"Error evaluating {item.get('title')}: {e}")
                     return None
 
         self.logger.error(f"Failed after 5 retries for {item.get('title')}")
