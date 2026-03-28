@@ -2,7 +2,7 @@ import time
 import json
 import logging
 import re
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from src.utils.config import Config
 
@@ -11,20 +11,15 @@ class LLMEvaluator:
         self.logger = logging.getLogger("engine.llm")
         self.logger.setLevel(logging.INFO)
 
-        # Modern LangChain parameters for better OpenRouter compatibility
-        self.llm = ChatOpenAI(
+        # Native Google Gemini integration for better stability
+        self.llm = ChatGoogleGenerativeAI(
             model=Config.LLM_MODEL,
-            api_key=Config.OPENROUTER_API_KEY,
-            base_url="https://openrouter.ai/api/v1",
+            google_api_key=Config.GOOGLE_API_KEY,
             temperature=0.3,
-            default_headers={
-                "HTTP-Referer": "https://holocene.vc",
-                "X-Title": "Holocene Startup Sourcing Agent",
-            }
         )
         
         # Verify key loading (First 10 chars only)
-        key_preview = f"{Config.OPENROUTER_API_KEY[:10]}..." if Config.OPENROUTER_API_KEY else "Missing"
+        key_preview = f"{Config.GOOGLE_API_KEY[:10]}..." if Config.GOOGLE_API_KEY else "Missing"
         self.logger.info(f"LLM Evaluator initialized with model: {Config.LLM_MODEL} and key: {key_preview}")
 
         self.prompt = self._create_prompt()

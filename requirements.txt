@@ -8,7 +8,8 @@ numpy
 # LLM & AI
 langchain
 langchain-community
-langchain-openai  # Works for OpenRouter as well
+langchain-openai
+langchain-google-genai
 
 # Data Sources
 praw  # Reddit
