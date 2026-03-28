@@ -11,12 +11,21 @@ class LLMEvaluator:
         self.logger = logging.getLogger("engine.llm")
         self.logger.setLevel(logging.INFO)
 
+        # Modern LangChain parameters for better OpenRouter compatibility
         self.llm = ChatOpenAI(
             model=Config.LLM_MODEL,
-            openai_api_key=Config.OPENROUTER_API_KEY,
-            openai_api_base="https://openrouter.ai/api/v1",
+            api_key=Config.OPENROUTER_API_KEY,
+            base_url="https://openrouter.ai/api/v1",
             temperature=0.3,
+            default_headers={
+                "HTTP-Referer": "https://holocene.vc",
+                "X-Title": "Holocene Startup Sourcing Agent",
+            }
         )
+        
+        # Verify key loading (First 10 chars only)
+        key_preview = f"{Config.OPENROUTER_API_KEY[:10]}..." if Config.OPENROUTER_API_KEY else "Missing"
+        self.logger.info(f"LLM Evaluator initialized with model: {Config.LLM_MODEL} and key: {key_preview}")
 
         self.prompt = self._create_prompt()
 
