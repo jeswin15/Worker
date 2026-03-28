@@ -7,7 +7,7 @@ load_dotenv()
 class Config:
     # LLM
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "").strip()
-    LLM_MODEL = os.getenv("LLM_MODEL", "gemini-1.5-flash")
+    LLM_MODEL = os.getenv("LLM_MODEL", "gemini-1.5-flash-latest")
 
     # Data Source APIs
     REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "")
